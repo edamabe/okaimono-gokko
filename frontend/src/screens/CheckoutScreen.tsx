@@ -99,12 +99,12 @@ export function CheckoutScreen({ shop, cart, onRestart, onClearCart, onGo }: Pro
       {/* レジ（ねこさん＋表示パネル）。お支払いのドロップ先 */}
       <section className="register-row">
         <img className="cashier" src={img.char(shop, co.staff.id)} alt={co.staff.name} draggable={false} />
+        <div className="lcd">
+          <div className="lcd-price">{price !== null ? `${price}えん` : 'いらっしゃいませ'}</div>
+          <div className="lcd-total">ごうけい {total.toLocaleString()}えん</div>
+        </div>
         <div className={`register ${phase === 'pay' ? 'await' : ''} ${overRegister ? 'over' : ''}`} data-drop="register">
           <img src={img.prop(shop, 'register')} alt="レジ" draggable={false} />
-          <div className="lcd">
-            <div className="lcd-price">{price !== null ? `${price}えん` : 'いらっしゃいませ'}</div>
-            <div className="lcd-total">ごうけい {total.toLocaleString()}えん</div>
-          </div>
           {paid && <img key={paid.id} className="paid-item" src={img.prop(shop, `pay_${paid.id}`)} alt="" />}
         </div>
       </section>

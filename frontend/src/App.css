@@ -172,21 +172,21 @@ img { -webkit-user-drag: none; }
 /* ---------- 会計 ---------- */
 .checkout {
   flex: 1; min-height: 0; position: relative; display: flex; flex-direction: column; justify-content: space-between;
-  background-size: cover; background-position: center; padding: 10px 14px 18px;
+  background-size: cover; background-position: center; padding: 14px 14px 18px;
 }
-.register-row { display: flex; align-items: flex-end; justify-content: center; gap: 12px; }
-.cashier { width: clamp(120px, 17vw, 210px); filter: drop-shadow(0 6px 6px rgba(0,0,0,.2)); }
-.register { position: relative; width: clamp(200px, 28vw, 330px); transition: transform .2s; }
+.register-row { display: flex; align-items: flex-end; justify-content: center; gap: 20px; position: relative; }
+.cashier { width: clamp(100px, 14vw, 170px); filter: drop-shadow(0 6px 6px rgba(0,0,0,.2)); }
+.register { position: relative; width: clamp(160px, 22vw, 260px); transition: transform .2s; }
 .register img { width: 100%; filter: drop-shadow(0 6px 6px rgba(0,0,0,.2)); }
 .register.await { animation: glow 1.2s ease-in-out infinite alternate; }
 .register.over { transform: scale(1.1); }
 .lcd {
-  position: absolute; left: 50%; top: -12px; transform: translate(-50%, -100%); min-width: 230px;
-  background: #0f3d2e; color: #7cfc9a; border: 5px solid #334155; border-radius: 14px; padding: 6px 14px; text-align: center;
-  font-weight: 900; box-shadow: 0 6px 12px rgba(0,0,0,.25);
+  align-self: center; min-width: 200px;
+  background: #0f3d2e; color: #7cfc9a; border: 4px solid #334155; border-radius: 16px; padding: 8px 16px; text-align: center;
+  font-weight: 900; box-shadow: 0 6px 12px rgba(0,0,0,.25); z-index: 10;
 }
-.lcd-price { font-size: clamp(1.5rem, 3.4vw, 2.3rem); letter-spacing: .04em; }
-.lcd-total { font-size: 1rem; color: #bbf7d0; }
+.lcd-price { font-size: clamp(1.4rem, 2.8vw, 2rem); letter-spacing: .04em; }
+.lcd-total { font-size: 0.95rem; color: #bbf7d0; margin-top: 2px; }
 .paid-item { position: absolute !important; width: 45% !important; left: 28%; top: 10%; animation: drop-in .5s cubic-bezier(.34,1.56,.64,1); }
 
 .lane { display: flex; align-items: flex-end; gap: 10px; }

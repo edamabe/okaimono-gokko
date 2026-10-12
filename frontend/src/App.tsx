@@ -15,8 +15,26 @@ let uidSeq = 0
 
 export default function App() {
   const shop = useMemo(() => findShop(new URLSearchParams(location.search).get('shop')), [])
-  const [screen, setScreen] = useState<Screen>({ type: 'title' })
-  const [cart, setCart] = useState<CartItem[]>([])
+  const params = useMemo(() => new URLSearchParams(location.search), [])
+  const [screen, setScreen] = useState<Screen>(() => {
+    const s = params.get('screen')
+    if (s === 'checkout') return { type: 'checkout' }
+    if (s === 'corner') return { type: 'corner', index: Number(params.get('index') ?? 0) }
+    return { type: 'title' }
+  })
+  const [cart, setCart] = useState<CartItem[]>(() => {
+    if (params.get('demo') === '1') {
+      const p1 = shop.corners[0]?.products[0]
+      const p2 = shop.corners[0]?.products[1]
+      const p3 = shop.corners[1]?.products[0]
+      const items: CartItem[] = []
+      if (p1) items.push({ uid: `i${++uidSeq}`, product: p1 })
+      if (p2) items.push({ uid: `i${++uidSeq}`, product: p2 })
+      if (p3) items.push({ uid: `i${++uidSeq}`, product: p3 })
+      return items
+    }
+    return []
+  })
   const [sound, setSound] = useState(true)
 
   useEffect(() => {
