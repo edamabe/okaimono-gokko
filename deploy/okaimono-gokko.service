@@ -1,0 +1,14 @@
+[Unit]
+Description=Okaimono-Gokko Frontend (Vite Preview :3060)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/edamabe/okaimono-gokko/frontend
+ExecStart=/home/edamabe/.nvm/versions/node/v22.22.2/bin/npm run preview -- --host 0.0.0.0 --port 3060
+Restart=always
+RestartSec=3
+Environment=PATH=/home/edamabe/.nvm/versions/node/v22.22.2/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,125 @@
+{
+  "id": "supermarket",
+  "name": "どうぶつスーパー",
+  "theme": { "primary": "#f97316", "accent": "#facc15", "bg": "#fff7ed" },
+  "title": {
+    "image": { "id": "title", "aspect": "16:9", "prompt": "A cheerful cute supermarket storefront with a striped awning, a little white bunny girl pushing a red shopping cart and a friendly brown bear waving at the entrance, fruits and vegetables displayed outside, bright sunny day" },
+    "voice": { "id": "start", "text": "おかいものを しよう！" }
+  },
+  "shopper": {
+    "id": "shopper", "name": "うさぎちゃん",
+    "prompt": "A cute small white bunny girl with a pink ribbon, full body, happily walking, holding a shopping list"
+  },
+  "cart": {
+    "id": "cart", "aspect": "1:1",
+    "prompt": "A cute empty red shopping cart seen from a slightly elevated front-side angle, large open basket, chunky toy-like design"
+  },
+  "corners": [
+    {
+      "id": "produce",
+      "name": "やさい・くだもの",
+      "emoji": "🥕",
+      "color": "#22c55e",
+      "background": { "id": "bg_produce", "prompt": "Inside a cute supermarket produce section, wooden crates and green walls, soft lighting, hanging sign shapes without text, empty middle area, view from the aisle" },
+      "staff": { "id": "staff_produce", "name": "りすさん", "prompt": "A cute squirrel shop clerk wearing a green apron and a cap, full body, waving hello" },
+      "voice": { "id": "corner_produce", "text": "やさいと くだものの コーナーだよ！" },
+      "products": [
+        { "id": "apple", "name": "りんご", "prompt": "A shiny red apple with a green leaf" },
+        { "id": "banana", "name": "バナナ", "prompt": "A bunch of three yellow bananas" },
+        { "id": "mikan", "name": "みかん", "prompt": "A Japanese mandarin orange (mikan) with a small leaf" },
+        { "id": "strawberry", "name": "いちご", "prompt": "A small clear plastic pack of red strawberries" },
+        { "id": "grape", "name": "ぶどう", "prompt": "A bunch of purple grapes" },
+        { "id": "watermelon", "name": "すいか", "prompt": "A round green striped watermelon" },
+        { "id": "peach", "name": "もも", "prompt": "A soft pink Japanese peach with a leaf" },
+        { "id": "carrot", "name": "にんじん", "prompt": "Two orange carrots with green leafy tops" },
+        { "id": "tomato", "name": "トマト", "prompt": "A shiny red tomato with a green stem" },
+        { "id": "cabbage", "name": "キャベツ", "prompt": "A round green cabbage" },
+        { "id": "onion", "name": "たまねぎ", "prompt": "A golden brown onion" },
+        { "id": "potato", "name": "じゃがいも", "prompt": "Two brown potatoes" },
+        { "id": "broccoli", "name": "ブロッコリー", "prompt": "A green broccoli" },
+        { "id": "pepper", "name": "ピーマン", "prompt": "A green bell pepper (Japanese piman)" },
+        { "id": "corn", "name": "とうもろこし", "prompt": "A yellow corn cob with green husk leaves" },
+        { "id": "eggplant", "name": "なす", "prompt": "A shiny purple Japanese eggplant" }
+      ]
+    },
+    {
+      "id": "fresh",
+      "name": "おさかな・おにく",
+      "emoji": "🐟",
+      "color": "#3b82f6",
+      "background": { "id": "bg_fresh", "prompt": "Inside a cute supermarket fresh fish and meat section, light blue tiles, white refrigerated display counters, soft lighting, empty middle area, view from the aisle" },
+      "staff": { "id": "staff_fresh", "name": "くまさん", "prompt": "A cute brown bear fishmonger wearing a white headband and a blue apron, full body, smiling and waving" },
+      "voice": { "id": "corner_fresh", "text": "おさかなと おにくの コーナーだよ！" },
+      "products": [
+        { "id": "salmon", "name": "さけ", "prompt": "A white foam tray with two pink salmon fillets wrapped in plastic" },
+        { "id": "fish", "name": "おさかな", "prompt": "A whole silver horse mackerel fish on a small tray" },
+        { "id": "sashimi", "name": "おさしみ", "prompt": "A small tray of tuna and salmon sashimi slices with green garnish" },
+        { "id": "shrimp", "name": "えび", "prompt": "A tray of three red cooked shrimps" },
+        { "id": "squid", "name": "いか", "prompt": "A cute white squid" },
+        { "id": "octopus", "name": "たこ", "prompt": "A cute red boiled octopus" },
+        { "id": "clam", "name": "あさり", "prompt": "A small mesh bag of clams" },
+        { "id": "beef", "name": "ぎゅうにく", "prompt": "A white foam tray of marbled beef slices wrapped in plastic" },
+        { "id": "pork", "name": "ぶたにく", "prompt": "A white foam tray of pink pork slices wrapped in plastic" },
+        { "id": "chicken", "name": "とりにく", "prompt": "A white foam tray of chicken thighs wrapped in plastic" },
+        { "id": "drumstick", "name": "てばさき", "prompt": "A tray of chicken wings" },
+        { "id": "sausage", "name": "ソーセージ", "prompt": "A pack of pink wiener sausages" },
+        { "id": "ham", "name": "ハム", "prompt": "A pack of round pink ham slices" },
+        { "id": "bacon", "name": "ベーコン", "prompt": "A pack of bacon strips" }
+      ]
+    },
+    {
+      "id": "cold",
+      "name": "れいぞう・れいとう",
+      "emoji": "🧊",
+      "color": "#06b6d4",
+      "background": { "id": "bg_cold", "prompt": "Inside a cute supermarket refrigerated and frozen foods section, glass door fridges glowing softly, icy light blue colors, snowflake decorations, empty middle area, view from the aisle" },
+      "staff": { "id": "staff_cold", "name": "ペンギンさん", "prompt": "A cute penguin shop clerk wearing a light blue apron and a scarf, full body, waving hello" },
+      "voice": { "id": "corner_cold", "text": "れいぞうと れいとうの コーナーだよ！" },
+      "products": [
+        { "id": "milk", "name": "ぎゅうにゅう", "prompt": "A white and blue milk carton with a cow pattern" },
+        { "id": "yogurt", "name": "ヨーグルト", "prompt": "A cup of yogurt with a strawberry picture on it" },
+        { "id": "cheese", "name": "チーズ", "prompt": "A yellow wedge of cheese with holes" },
+        { "id": "butter", "name": "バター", "prompt": "A block of butter in a yellow box" },
+        { "id": "egg", "name": "たまご", "prompt": "A clear plastic pack of ten white eggs" },
+        { "id": "pudding", "name": "プリン", "prompt": "A cup of custard pudding with caramel on top" },
+        { "id": "tofu", "name": "とうふ", "prompt": "A white block of tofu in a clear plastic pack" },
+        { "id": "natto", "name": "なっとう", "prompt": "A small white foam pack of natto fermented soybeans" },
+        { "id": "juice", "name": "ジュース", "prompt": "An orange juice carton with an orange picture" },
+        { "id": "icecream", "name": "アイス", "prompt": "A pastel ice cream cup with a wooden spoon" },
+        { "id": "popsicle", "name": "アイスキャンディー", "prompt": "A pink strawberry popsicle on a stick" },
+        { "id": "pizza", "name": "ピザ", "prompt": "A frozen pizza in a box showing the pizza" },
+        { "id": "gyoza", "name": "ぎょうざ", "prompt": "A frozen gyoza dumplings pack showing dumplings" },
+        { "id": "fries", "name": "ポテト", "prompt": "A bag of frozen french fries" },
+        { "id": "edamame", "name": "えだまめ", "prompt": "A bag of frozen green edamame soybeans" }
+      ]
+    }
+  ],
+  "checkout": {
+    "background": { "id": "bg_checkout", "prompt": "Inside a cute supermarket checkout area, bright and clean, warm cream walls, soft lighting, empty foreground, view from the customer side" },
+    "staff": { "id": "staff_checkout", "name": "ねこさん", "prompt": "A cute calico cat cashier wearing an orange apron and a name tag without text, upper body, smiling" },
+    "voices": {
+      "intro": { "id": "checkout_intro", "text": "おかいけいを しようね！ ピッて してね！" },
+      "empty": { "id": "checkout_empty", "text": "カートが からっぽだよ。 おかいものを してきてね！" },
+      "allScanned": { "id": "all_scanned", "text": "ぜんぶ ふくろに いれたよ！" },
+      "askPayment": { "id": "ask_payment", "text": "おしはらいは なんに しますか？" },
+      "thanks": { "id": "thanks", "text": "ありがとうございました！" },
+      "done": { "id": "done", "text": "おかいもの できたね！" }
+    },
+    "props": [
+      { "id": "scanner", "aspect": "1:1", "prompt": "A cute handheld barcode scanner, orange and white, toy-like, with a red light" },
+      { "id": "bag", "aspect": "1:1", "prompt": "An empty white plastic shopping bag with handles, standing open" },
+      { "id": "register", "aspect": "1:1", "prompt": "A cute pastel cash register with a small screen and a coin tray" }
+    ],
+    "payments": [
+      { "id": "cash", "name": "げんきん", "sfx": "chin", "prompt": "Japanese yen money: a 1000 yen paper bill and a few shiny coins" },
+      { "id": "card", "name": "カード", "sfx": "pi", "prompt": "A cute colorful credit card with a gold chip" },
+      { "id": "emoney", "name": "でんしけっさい", "sfx": "piroron", "prompt": "A cute smartphone showing a QR code payment screen with a big star" }
+    ],
+    "prices": [120, 150, 180, 230, 280, 320, 350, 380, 420, 480, 520, 580, 650, 780, 890]
+  },
+  "reactions": [
+    { "id": "react_1", "text": "カートに いれたね！" },
+    { "id": "react_2", "text": "おいしそう！" },
+    { "id": "react_3", "text": "いいね！" }
+  ]
+}

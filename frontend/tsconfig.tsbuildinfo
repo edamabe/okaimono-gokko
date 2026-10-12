@@ -1,0 +1,1 @@
+{"root":["./src/App.tsx","./src/main.tsx","./src/types.ts","./src/components/Cart.tsx","./src/components/TopBar.tsx","./src/data/shops/index.ts","./src/lib/assets.ts","./src/lib/audio.ts","./src/lib/drag.tsx","./src/screens/CheckoutScreen.tsx","./src/screens/CornerScreen.tsx","./src/screens/TitleScreen.tsx"],"version":"6.0.3"}
