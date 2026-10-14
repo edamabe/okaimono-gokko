@@ -85,9 +85,8 @@ function ShelfLayout({ shop, corner }: { shop: Shop; corner: Corner }) {
     default:
       return (
         <div className="shelf">
-          {corner.products.map((p, i) => (
+          {corner.products.map((p) => (
             <button key={p.id} className={`product ${drag?.payload.id === p.id ? 'lifted' : ''}`}
-              style={{ animationDelay: `${i * 40}ms` }}
               onPointerDown={(e) => start(e, { kind: 'product', id: p.id, image: img.product(shop, p.id), data: p })}>
               <img src={img.product(shop, p.id)} alt={p.name} draggable={false} />
               <span className="product-name">{p.name}</span>
