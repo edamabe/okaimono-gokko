@@ -80,6 +80,9 @@ export function CornerScreen({ shop, index, cart, onAdd, onRemove, onGo }: Props
 /** コーナーの陳列レイアウト。将来ここに layout ごとの描画を追加する */
 function ShelfLayout({ shop, corner }: { shop: Shop; corner: Corner }) {
   const { start, drag } = useDrag()
+  const totalSlots = Math.max(16, Math.ceil(corner.products.length / 4) * 4)
+  const emptyCount = totalSlots - corner.products.length
+
   switch (corner.layout ?? 'shelf') {
     case 'shelf':
     default:
@@ -91,6 +94,9 @@ function ShelfLayout({ shop, corner }: { shop: Shop; corner: Corner }) {
               <img src={img.product(shop, p.id)} alt={p.name} draggable={false} />
               <span className="product-name">{p.name}</span>
             </button>
+          ))}
+          {Array.from({ length: emptyCount }).map((_, i) => (
+            <div key={`empty-${i}`} className="product empty" aria-hidden="true" />
           ))}
         </div>
       )

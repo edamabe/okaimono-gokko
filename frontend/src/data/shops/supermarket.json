@@ -55,14 +55,14 @@
         { "id": "fish", "name": "おさかな", "prompt": "A whole silver horse mackerel fish on a small tray" },
         { "id": "sashimi", "name": "おさしみ", "prompt": "A small tray of tuna and salmon sashimi slices with green garnish" },
         { "id": "shrimp", "name": "えび", "prompt": "A tray of three red cooked shrimps" },
-        { "id": "squid", "name": "いか", "prompt": "A cute white squid" },
+        { "id": "squid", "name": "いか", "prompt": "A cute plain white Japanese squid with big cute eyes, simple white body, light cream tentacles, single whole squid, no rainbow colors, no party hat, toddler picture book illustration" },
         { "id": "octopus", "name": "たこ", "prompt": "A cute red boiled octopus" },
         { "id": "clam", "name": "あさり", "prompt": "A small mesh bag of clams" },
         { "id": "beef", "name": "ぎゅうにく", "prompt": "A white foam tray of marbled beef slices wrapped in plastic" },
         { "id": "pork", "name": "ぶたにく", "prompt": "A white foam tray of pink pork slices wrapped in plastic" },
         { "id": "chicken", "name": "とりにく", "prompt": "A white foam tray of chicken thighs wrapped in plastic" },
-        { "id": "drumstick", "name": "てばさき", "prompt": "A tray of chicken wings" },
-        { "id": "sausage", "name": "ソーセージ", "prompt": "A pack of pink wiener sausages" },
+        { "id": "drumstick", "name": "チキンナゲット", "reading": "チキンナゲット", "prompt": "A tray of chicken nuggets" },
+        { "id": "sausage", "name": "ウィンナー", "reading": "ウィンナー", "prompt": "A pack of pink wiener sausages" },
         { "id": "ham", "name": "ハム", "prompt": "A pack of round pink ham slices" },
         { "id": "bacon", "name": "ベーコン", "prompt": "A pack of bacon strips" }
       ]
