@@ -11,7 +11,12 @@ export interface Product {
   prompt: string
 }
 
-export interface Character { id: string; name: string; prompt: string }
+export interface Character {
+  id: string
+  name: string
+  prompt: string
+  talks?: Voice[]
+}
 
 /** コーナーの見た目。将来 'freezer'（冷凍ケース）や 'counter'（アイス屋の注文台）などを追加できる */
 export type CornerLayout = 'shelf'

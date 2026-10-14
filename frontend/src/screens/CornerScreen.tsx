@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { Screen } from '../App'
 import type { CartItem, Corner, Product, Shop } from '../types'
 import { img, voiceUrl } from '../lib/assets'
@@ -18,11 +18,30 @@ interface Props {
 export function CornerScreen({ shop, index, cart, onAdd, onRemove, onGo }: Props) {
   const corner = shop.corners[index]
   const [talking, setTalking] = useState(true)
+  const [talkText, setTalkText] = useState<string | null>(null)
+  const talkTimerRef = useRef<number | null>(null)
 
   useEffect(() => {
     setTalking(true)
+    setTalkText(null)
+    if (talkTimerRef.current) window.clearTimeout(talkTimerRef.current)
     void playVoice(voiceUrl(shop, corner.voice.id)).then(() => setTalking(false))
   }, [shop, corner])
+
+  const handleTapStaff = () => {
+    const talks = corner.staff.talks
+    if (!talks || talks.length === 0) return
+    sfx('pop')
+    const candidates = talks.length > 1 ? talks.filter((t) => t.text !== talkText) : talks
+    const pick = candidates[Math.floor(Math.random() * candidates.length)]
+    setTalking(true)
+    setTalkText(pick.text)
+    if (talkTimerRef.current) window.clearTimeout(talkTimerRef.current)
+    void playVoice(voiceUrl(shop, pick.id)).then(() => {
+      setTalking(false)
+      talkTimerRef.current = window.setTimeout(() => setTalkText(null), 3500)
+    })
+  }
 
   useDragHandlers(
     (p) => {
@@ -54,10 +73,12 @@ export function CornerScreen({ shop, index, cart, onAdd, onRemove, onGo }: Props
     <main className="corner" style={{ backgroundImage: `url(${img.bg(shop, corner.background.id)})`, '--corner': corner.color } as React.CSSProperties}>
       <section className="shelf-area">
         <div className="corner-head">
-          <img className={`staff ${talking ? 'talking' : ''}`} src={img.char(shop, corner.staff.id)} alt={corner.staff.name} draggable={false} />
+          <button className="staff-btn" onClick={handleTapStaff} type="button" aria-label={`${corner.staff.name}とおはなし`}>
+            <img className={`staff ${talking ? 'talking' : ''}`} src={img.char(shop, corner.staff.id)} alt={corner.staff.name} draggable={false} />
+          </button>
           <div className="bubble">
             <b>{corner.emoji} {corner.name}</b> コーナー
-            <span>すきなものを カートに いれてね！</span>
+            <span>{talkText ?? 'すきなものを カートに いれてね！'}</span>
           </div>
         </div>
         <ShelfLayout shop={shop} corner={corner} />

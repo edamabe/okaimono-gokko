@@ -8,7 +8,7 @@
   },
   "shopper": {
     "id": "shopper", "name": "うさぎちゃん",
-    "prompt": "A cute small white bunny girl with a pink ribbon, full body, happily walking, holding a shopping list"
+    "prompt": "A cute small white bunny girl with strictly two bunny ears only, adorable face, sparkling eyes, rosy cheeks, wearing a cute pink dress with a small ribbon bow, full body, happily walking, holding a small shopping list notepad, exactly two ears, anatomically correct bunny"
   },
   "cart": {
     "id": "cart", "aspect": "1:1",
@@ -21,7 +21,18 @@
       "emoji": "🥕",
       "color": "#22c55e",
       "background": { "id": "bg_produce", "prompt": "Inside a cute supermarket produce section, wooden crates and green walls, soft lighting, hanging sign shapes without text, empty middle area, view from the aisle" },
-      "staff": { "id": "staff_produce", "name": "りすさん", "prompt": "A cute squirrel shop clerk wearing a green apron and a cap, full body, waving hello" },
+      "staff": {
+        "id": "staff_produce",
+        "name": "りすさん",
+        "prompt": "A cute squirrel shop clerk wearing a green apron and a cap, full body, waving hello",
+        "talks": [
+          { "id": "staff_produce_1", "text": "きょうは なにに しますか？" },
+          { "id": "staff_produce_2", "text": "なにか おさがしですか？" },
+          { "id": "staff_produce_3", "text": "にんじんが おやすく なっていますよ！" },
+          { "id": "staff_produce_4", "text": "あまーい くだものも おいしいですよ！" },
+          { "id": "staff_produce_5", "text": "いらっしゃいませ！ ごゆっくり どうぞ！" }
+        ]
+      },
       "voice": { "id": "corner_produce", "text": "やさいと くだものの コーナーだよ！" },
       "products": [
         { "id": "apple", "name": "りんご", "prompt": "A shiny red apple with a green leaf" },
@@ -48,7 +59,18 @@
       "emoji": "🐟",
       "color": "#3b82f6",
       "background": { "id": "bg_fresh", "prompt": "Inside a cute supermarket fresh fish and meat section, light blue tiles, white refrigerated display counters, soft lighting, empty middle area, view from the aisle" },
-      "staff": { "id": "staff_fresh", "name": "くまさん", "prompt": "A cute brown bear fishmonger wearing a white headband and a blue apron, full body, smiling and waving" },
+      "staff": {
+        "id": "staff_fresh",
+        "name": "くまさん",
+        "prompt": "A cute brown bear fishmonger wearing a white headband and a blue apron, full body, smiling and waving",
+        "talks": [
+          { "id": "staff_fresh_1", "text": "きょうは なにに しますか？" },
+          { "id": "staff_fresh_2", "text": "なにか おさがしですか？" },
+          { "id": "staff_fresh_3", "text": "きょうの おさかなは とっても しんせんだよ！" },
+          { "id": "staff_fresh_4", "text": "おいしい おにくが たくさん あるよ！" },
+          { "id": "staff_fresh_5", "text": "チキンナゲットも おすすめですよ！" }
+        ]
+      },
       "voice": { "id": "corner_fresh", "text": "おさかなと おにくの コーナーだよ！" },
       "products": [
         { "id": "salmon", "name": "さけ", "prompt": "A white foam tray with two pink salmon fillets wrapped in plastic" },
@@ -73,7 +95,18 @@
       "emoji": "🧊",
       "color": "#06b6d4",
       "background": { "id": "bg_cold", "prompt": "Inside a cute supermarket refrigerated and frozen foods section, glass door fridges glowing softly, icy light blue colors, snowflake decorations, empty middle area, view from the aisle" },
-      "staff": { "id": "staff_cold", "name": "ペンギンさん", "prompt": "A cute penguin shop clerk wearing a light blue apron and a scarf, full body, waving hello" },
+      "staff": {
+        "id": "staff_cold",
+        "name": "ペンギンさん",
+        "prompt": "A cute penguin shop clerk wearing a light blue apron and a scarf, full body, waving hello",
+        "talks": [
+          { "id": "staff_cold_1", "text": "きょうは なにに しますか？" },
+          { "id": "staff_cold_2", "text": "なにか おさがしですか？" },
+          { "id": "staff_cold_3", "text": "ひえひえの アイスは いかがですか？" },
+          { "id": "staff_cold_4", "text": "あまーい プリンも おすすめですよ！" },
+          { "id": "staff_cold_5", "text": "いらっしゃいませ！ ごゆっくり みてね！" }
+        ]
+      },
       "voice": { "id": "corner_cold", "text": "れいぞうと れいとうの コーナーだよ！" },
       "products": [
         { "id": "milk", "name": "ぎゅうにゅう", "prompt": "A white and blue milk carton with a cow pattern" },
@@ -96,7 +129,16 @@
   ],
   "checkout": {
     "background": { "id": "bg_checkout", "prompt": "Inside a cute supermarket checkout area, bright and clean, warm cream walls, soft lighting, empty foreground, view from the customer side" },
-    "staff": { "id": "staff_checkout", "name": "ねこさん", "prompt": "A cute calico cat cashier wearing an orange apron and a name tag without text, upper body, smiling" },
+    "staff": {
+      "id": "staff_checkout",
+      "name": "ねこさん",
+      "prompt": "A cute calico cat cashier wearing an orange apron and a name tag without text, upper body, smiling",
+      "talks": [
+        { "id": "staff_checkout_1", "text": "バーコードリーダーで ピッて してね！" },
+        { "id": "staff_checkout_2", "text": "カゴの なかみを スキャンしてね！" },
+        { "id": "staff_checkout_3", "text": "いらっしゃいませ！ おかいけい するよ！" }
+      ]
+    },
     "voices": {
       "intro": { "id": "checkout_intro", "text": "おかいけいを しようね！ ピッて してね！" },
       "empty": { "id": "checkout_empty", "text": "カートが からっぽだよ。 おかいものを してきてね！" },

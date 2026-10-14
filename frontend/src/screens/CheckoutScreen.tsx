@@ -30,6 +30,7 @@ export function CheckoutScreen({ shop, cart, onRestart, onClearCart, onGo }: Pro
   const [total, setTotal] = useState(0)
   const [flash, setFlash] = useState(0)
   const [paid, setPaid] = useState<Payment | null>(null)
+  const [cashierTalking, setCashierTalking] = useState(false)
   const alive = useRef(true)
 
   useEffect(() => {
@@ -38,6 +39,15 @@ export function CheckoutScreen({ shop, cart, onRestart, onClearCart, onGo }: Pro
     return () => { alive.current = false }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const handleTapCashier = () => {
+    const talks = co.staff.talks
+    if (!talks || talks.length === 0) return
+    sfx('pop')
+    const pick = talks[Math.floor(Math.random() * talks.length)]
+    setCashierTalking(true)
+    void playVoice(v(pick.id)).then(() => setCashierTalking(false))
+  }
 
   const scan = async (item: CartItem) => {
     const p = co.prices[Math.floor(Math.random() * co.prices.length)]
@@ -98,7 +108,9 @@ export function CheckoutScreen({ shop, cart, onRestart, onClearCart, onGo }: Pro
     <main className="checkout" style={{ backgroundImage: `url(${img.bg(shop, co.background.id)})` }}>
       {/* レジ（ねこさん＋表示パネル）。お支払いのドロップ先 */}
       <section className="register-row">
-        <img className="cashier" src={img.char(shop, co.staff.id)} alt={co.staff.name} draggable={false} />
+        <button className="cashier-btn" onClick={handleTapCashier} type="button" aria-label={`${co.staff.name}とおはなし`}>
+          <img className={`cashier ${cashierTalking ? 'talking' : ''}`} src={img.char(shop, co.staff.id)} alt={co.staff.name} draggable={false} />
+        </button>
         <div className="lcd">
           <div className="lcd-price">{price !== null ? `${price}えん` : 'いらっしゃいませ'}</div>
           <div className="lcd-total">ごうけい {total.toLocaleString()}えん</div>
