@@ -24,13 +24,31 @@ export default function App() {
   })
   const [cart, setCart] = useState<CartItem[]>(() => {
     if (params.get('demo') === '1') {
-      const p1 = shop.corners[0]?.products[0]
-      const p2 = shop.corners[0]?.products[1]
-      const p3 = shop.corners[1]?.products[0]
       const items: CartItem[] = []
-      if (p1) items.push({ uid: `i${++uidSeq}`, product: p1 })
-      if (p2) items.push({ uid: `i${++uidSeq}`, product: p2 })
-      if (p3) items.push({ uid: `i${++uidSeq}`, product: p3 })
+      if (shop.id === 'burger') {
+        const burgerResult = shop.corners[0]?.results?.[0]
+        if (burgerResult) {
+          items.push({
+            uid: `i${++uidSeq}`,
+            product: {
+              ...burgerResult,
+              layers: ['bun_bottom', 'patty', 'cheese', 'lettuce', 'tomato', 'bun_top'],
+              price: 450,
+            },
+          })
+        }
+        const fries = shop.corners[1]?.products[0]
+        if (fries) items.push({ uid: `i${++uidSeq}`, product: fries })
+        const orange = shop.corners[2]?.products[0]
+        if (orange) items.push({ uid: `i${++uidSeq}`, product: orange })
+      } else {
+        const p1 = shop.corners[0]?.products[0]
+        const p2 = shop.corners[0]?.products[1]
+        const p3 = shop.corners[1]?.products[0]
+        if (p1) items.push({ uid: `i${++uidSeq}`, product: p1 })
+        if (p2) items.push({ uid: `i${++uidSeq}`, product: p2 })
+        if (p3) items.push({ uid: `i${++uidSeq}`, product: p3 })
+      }
       return items
     }
     return []

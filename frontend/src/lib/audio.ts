@@ -104,7 +104,7 @@ export const wait = (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
 
 // ---------- 効果音（Web Audio 合成） ----------
 
-type Sfx = 'pop' | 'scan' | 'chin' | 'pi' | 'piroron' | 'pickup' | 'whoosh' | 'fanfare'
+type Sfx = 'pop' | 'scan' | 'chin' | 'pi' | 'piroron' | 'pickup' | 'whoosh' | 'fanfare' | 'ding'
 
 function tone(freq: number, start: number, dur: number, type: OscillatorType = 'sine', vol = 0.25) {
   const c = getCtx()
@@ -162,5 +162,65 @@ export function sfx(kind: Sfx) {
       notes.forEach((f, i) => tone(f, times[i], i >= 4 ? 0.5 : 0.16, 'triangle', 0.18))
       break
     }
+    case 'ding': { // タイマーの「チーン」
+      tone(1760, 0, 0.9, 'sine', 0.22)
+      tone(2637, 0, 0.6, 'sine', 0.08)
+      break
+    }
+  }
+}
+
+// ---------- ループ音（ノイズ合成）: フライヤーの「ジュワー」、ドリンクの「トポトポ」 ----------
+
+let noiseBuf: AudioBuffer | null = null
+function getNoise(c: AudioContext): AudioBuffer {
+  if (!noiseBuf) {
+    noiseBuf = c.createBuffer(1, c.sampleRate * 2, c.sampleRate)
+    const d = noiseBuf.getChannelData(0)
+    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1
+  }
+  return noiseBuf
+}
+
+/** ループ音を開始し、止める関数を返す */
+export function startLoop(kind: 'sizzle' | 'pour'): () => void {
+  if (muted) return () => {}
+  const c = getCtx()
+  if (c.state === 'suspended') void c.resume()
+  const src = c.createBufferSource()
+  src.buffer = getNoise(c)
+  src.loop = true
+  const filter = c.createBiquadFilter()
+  const g = c.createGain()
+  const vol = kind === 'sizzle' ? 0.07 : 0.11
+  if (kind === 'sizzle') {
+    filter.type = 'highpass'
+    filter.frequency.value = 3500
+  } else {
+    filter.type = 'bandpass'
+    filter.frequency.value = 900
+    filter.Q.value = 1.2
+  }
+  // 「パチパチ」「トポトポ」っぽく音量をゆらす
+  const lfo = c.createOscillator()
+  const lfoGain = c.createGain()
+  lfo.frequency.value = kind === 'sizzle' ? 13 : 7
+  lfoGain.gain.value = vol * 0.5
+  lfo.connect(lfoGain).connect(g.gain)
+  g.gain.setValueAtTime(0.0001, c.currentTime)
+  g.gain.exponentialRampToValueAtTime(vol, c.currentTime + 0.08)
+  src.connect(filter).connect(g).connect(c.destination)
+  src.start()
+  lfo.start()
+  let stopped = false
+  return () => {
+    if (stopped) return
+    stopped = true
+    const t = c.currentTime
+    g.gain.cancelScheduledValues(t)
+    g.gain.setValueAtTime(Math.max(g.gain.value, 0.0001), t)
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.15)
+    src.stop(t + 0.2)
+    lfo.stop(t + 0.2)
   }
 }

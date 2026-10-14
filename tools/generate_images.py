@@ -46,6 +46,14 @@ STYLE_SCENE = (
     "adorable animal characters, warm and happy mood, leave the bottom third calm for a title panel, "
     "absolutely no text, no letters, no signs with words."
 )
+# ハンバーガーの具材など「積み重ねる」パーツ用（正方形にパディングせず、横長のまま切り抜く）
+STYLE_LAYER = (
+    "Cute kawaii flat illustration for toddlers, thick soft rounded dark-brown outlines, "
+    "bright cheerful colors, gentle shading. Viewed from the front at eye level with only a very slight "
+    "high angle, wide horizontal shape, exactly like one layer of a stacked hamburger in a picture book, "
+    "single item centered filling the width, isolated on a pure solid white background (#FFFFFF), "
+    "no plate, no shadow on background, absolutely no text, no letters, no numbers."
+)
 
 
 def build_jobs(shop: dict) -> list[dict]:
@@ -53,13 +61,14 @@ def build_jobs(shop: dict) -> list[dict]:
     jobs: list[dict] = []
 
     def add(kind: str, item_id: str, prompt: str, aspect: str = "1:1", subdir: str = ""):
-        style = {"object": STYLE_OBJECT, "character": STYLE_CHARACTER,
+        style = {"object": STYLE_OBJECT, "character": STYLE_CHARACTER, "layer": STYLE_LAYER,
                  "background": STYLE_BACKGROUND, "scene": STYLE_SCENE}[kind]
         jobs.append({
             "id": item_id,
             "prompt": f"{prompt}. {style}",
             "aspect": aspect,
-            "transparent": kind in ("object", "character"),
+            "transparent": kind in ("object", "character", "layer"),
+            "square": kind != "layer",
             "path": Path(shop["id"]) / subdir / f"{item_id}.webp",
         })
 
@@ -71,8 +80,11 @@ def build_jobs(shop: dict) -> list[dict]:
     for c in shop["corners"]:
         add("background", c["background"]["id"], c["background"]["prompt"], "16:9", "bg")
         add("character", c["staff"]["id"], c["staff"]["prompt"], subdir="chars")
+        product_kind = "layer" if c.get("layout") == "burger" else "object"
         for p in c["products"]:
-            add("object", p["id"], p["prompt"], subdir="products")
+            add(product_kind, p["id"], p["prompt"], "4:3" if product_kind == "layer" else "1:1", "products")
+        for r in c.get("results", []):
+            add("object", r["id"], r["prompt"], subdir="products")
 
     co = shop["checkout"]
     add("background", co["background"]["id"], co["background"]["prompt"], "16:9", "bg")
@@ -84,7 +96,7 @@ def build_jobs(shop: dict) -> list[dict]:
     return jobs
 
 
-def remove_white_background(img: Image.Image, tol: int = 28) -> Image.Image:
+def remove_white_background(img: Image.Image, tol: int = 28, square: bool = True) -> Image.Image:
     """外周から白をフラッドフィルして透過にする（被写体内部の白は保持）"""
     img = img.convert("RGBA")
     w, h = img.size
@@ -103,11 +115,18 @@ def remove_white_background(img: Image.Image, tol: int = 28) -> Image.Image:
     bbox = img.getbbox()
     if bbox:
         img = img.crop(bbox)
+    if not square:
+        # 重ねるパーツ: 横長のまま、ごく僅かな余白だけ付ける
+        pad = max(2, int(img.width * 0.01))
+        canvas = Image.new("RGBA", (img.width + pad * 2, img.height + pad * 2), (0, 0, 0, 0))
+        canvas.paste(img, (pad, pad), img)
+        return canvas
     # 余白付き正方形キャンバスへ
     side = int(max(img.size) * 1.06)
     canvas = Image.new("RGBA", (side, side), (0, 0, 0, 0))
     canvas.paste(img, ((side - img.width) // 2, (side - img.height) // 2), img)
     return canvas
+
 
 
 def generate_one(client: genai.Client, job: dict, retries: int = 3) -> bytes:
@@ -138,7 +157,7 @@ def process(client: genai.Client, job: dict, out_root: Path) -> str:
     out = out_root / job["path"]
     out.parent.mkdir(parents=True, exist_ok=True)
     if job["transparent"]:
-        img = remove_white_background(img)
+        img = remove_white_background(img, square=job.get("square", True))
         img.thumbnail((512, 512), Image.LANCZOS)
         img.save(out, "WEBP", quality=88, method=6)
     else:

@@ -3,8 +3,11 @@ import type { Screen } from '../App'
 import type { CartItem, Corner, Product, Shop } from '../types'
 import { img, voiceUrl } from '../lib/assets'
 import { playVoice, playVoiceIfIdle, sfx } from '../lib/audio'
-import { useDrag, useDragHandlers } from '../lib/drag'
+import { useDrag, useDragHandlers, type DragPayload } from '../lib/drag'
 import { Cart } from '../components/Cart'
+import { BurgerLayout } from './layouts/BurgerLayout'
+import { FryerLayout } from './layouts/FryerLayout'
+import { DrinkLayout } from './layouts/DrinkLayout'
 
 interface Props {
   shop: Shop
@@ -15,11 +18,26 @@ interface Props {
   onGo: (s: Screen) => void
 }
 
+/** レイアウト固有のドラッグ処理。処理したら true を返す */
+export interface LayoutHandlers {
+  start?: (p: DragPayload) => boolean
+  drop?: (p: DragPayload, target: string | null) => boolean
+}
+
+export interface LayoutProps {
+  shop: Shop
+  corner: Corner
+  /** カート（トレー）に入れる（効果音・リアクション付き） */
+  onAdd: (p: Product) => void
+  handlers: React.MutableRefObject<LayoutHandlers>
+}
+
 export function CornerScreen({ shop, index, cart, onAdd, onRemove, onGo }: Props) {
   const corner = shop.corners[index]
   const [talking, setTalking] = useState(true)
   const [talkText, setTalkText] = useState<string | null>(null)
   const talkTimerRef = useRef<number | null>(null)
+  const handlers = useRef<LayoutHandlers>({})
 
   useEffect(() => {
     setTalking(true)
@@ -43,21 +61,27 @@ export function CornerScreen({ shop, index, cart, onAdd, onRemove, onGo }: Props
     })
   }
 
+  const addWithReaction = (product: Product) => {
+    onAdd(product)
+    sfx('pop')
+    const r = shop.reactions ?? []
+    if (r.length && Math.random() < 0.35) {
+      setTimeout(() => playVoiceIfIdle(voiceUrl(shop, r[Math.floor(Math.random() * r.length)].id)), 250)
+    }
+  }
+
   useDragHandlers(
     (p) => {
+      if (handlers.current.start?.(p)) return
       if (p.kind === 'product') {
         sfx('pickup')
         void playVoice(voiceUrl(shop, `product_${p.id}`))
       }
     },
     (p, target) => {
+      if (handlers.current.drop?.(p, target)) return
       if (p.kind === 'product' && target === 'cart') {
-        onAdd(p.data as Product)
-        sfx('pop')
-        const r = shop.reactions ?? []
-        if (r.length && Math.random() < 0.35) {
-          setTimeout(() => playVoiceIfIdle(voiceUrl(shop, r[Math.floor(Math.random() * r.length)].id)), 250)
-        }
+        addWithReaction(p.data as Product)
       } else if (p.kind === 'cart-item' && target !== 'cart') {
         onRemove(p.id)
         sfx('whoosh')
@@ -68,9 +92,10 @@ export function CornerScreen({ shop, index, cart, onAdd, onRemove, onGo }: Props
   const prev = index > 0 ? { type: 'corner', index: index - 1 } as Screen : null
   const next: Screen = index < shop.corners.length - 1 ? { type: 'corner', index: index + 1 } : { type: 'checkout' }
   const nextLabel = next.type === 'checkout' ? 'おかいけい' : shop.corners[index + 1].name
+  const layoutProps: LayoutProps = { shop, corner, onAdd: addWithReaction, handlers }
 
   return (
-    <main className="corner" style={{ backgroundImage: `url(${img.bg(shop, corner.background.id)})`, '--corner': corner.color } as React.CSSProperties}>
+    <main className={`corner layout-${corner.layout ?? 'shelf'}`} style={{ backgroundImage: `url(${img.bg(shop, corner.background.id)})`, '--corner': corner.color } as React.CSSProperties}>
       <section className="shelf-area">
         <div className="corner-head">
           <button className="staff-btn" onClick={handleTapStaff} type="button" aria-label={`${corner.staff.name}とおはなし`}>
@@ -78,10 +103,17 @@ export function CornerScreen({ shop, index, cart, onAdd, onRemove, onGo }: Props
           </button>
           <div className="bubble">
             <b>{corner.emoji} {corner.name}</b> コーナー
-            <span>{talkText ?? 'すきなものを カートに いれてね！'}</span>
+            <span>{talkText ?? corner.hint ?? `すきなものを ${shop.cartName ?? 'カート'}に いれてね！`}</span>
           </div>
         </div>
-        <ShelfLayout shop={shop} corner={corner} />
+        {(() => {
+          switch (corner.layout ?? 'shelf') {
+            case 'burger': return <BurgerLayout key={corner.id} {...layoutProps} />
+            case 'fryer': return <FryerLayout key={corner.id} {...layoutProps} />
+            case 'drink': return <DrinkLayout key={corner.id} {...layoutProps} />
+            default: return <ShelfLayout shop={shop} corner={corner} />
+          }
+        })()}
       </section>
 
       <aside className="cart-area">
@@ -98,28 +130,24 @@ export function CornerScreen({ shop, index, cart, onAdd, onRemove, onGo }: Props
   )
 }
 
-/** コーナーの陳列レイアウト。将来ここに layout ごとの描画を追加する */
+/** 陳列棚レイアウト（スーパー等） */
 function ShelfLayout({ shop, corner }: { shop: Shop; corner: Corner }) {
   const { start, drag } = useDrag()
   const totalSlots = Math.max(16, Math.ceil(corner.products.length / 4) * 4)
   const emptyCount = totalSlots - corner.products.length
 
-  switch (corner.layout ?? 'shelf') {
-    case 'shelf':
-    default:
-      return (
-        <div className="shelf">
-          {corner.products.map((p) => (
-            <button key={p.id} className={`product ${drag?.payload.id === p.id ? 'lifted' : ''}`}
-              onPointerDown={(e) => start(e, { kind: 'product', id: p.id, image: img.product(shop, p.id), data: p })}>
-              <img src={img.product(shop, p.id)} alt={p.name} draggable={false} />
-              <span className="product-name">{p.name}</span>
-            </button>
-          ))}
-          {Array.from({ length: emptyCount }).map((_, i) => (
-            <div key={`empty-${i}`} className="product empty" aria-hidden="true" />
-          ))}
-        </div>
-      )
-  }
+  return (
+    <div className="shelf">
+      {corner.products.map((p) => (
+        <button key={p.id} className={`product ${drag?.payload.id === p.id ? 'lifted' : ''}`}
+          onPointerDown={(e) => start(e, { kind: 'product', id: p.id, image: img.product(shop, p.id), data: p })}>
+          <img src={img.product(shop, p.id)} alt={p.name} draggable={false} />
+          <span className="product-name">{p.name}</span>
+        </button>
+      ))}
+      {Array.from({ length: emptyCount }).map((_, i) => (
+        <div key={`empty-${i}`} className="product empty" aria-hidden="true" />
+      ))}
+    </div>
+  )
 }

@@ -1,0 +1,168 @@
+{
+  "id": "burger",
+  "name": "どうぶつバーガー",
+  "cartName": "トレー",
+  "theme": { "primary": "#dc2626", "accent": "#facc15", "bg": "#fef9c3" },
+  "title": {
+    "image": { "id": "title", "aspect": "16:9", "prompt": "A cheerful cute hamburger shop storefront with a red and yellow striped awning and a giant hamburger-shaped sign without any text, a little white bunny girl with strictly two ears and a friendly lion chef in a white chef hat waving at the entrance, french fries and soda decorations, bright sunny day" },
+    "voice": { "id": "start", "text": "ハンバーガーやさんで おかいものを しよう！" }
+  },
+  "shopper": {
+    "id": "shopper", "name": "うさぎちゃん",
+    "prompt": "A cute small white bunny girl with strictly two bunny ears only, adorable face, sparkling eyes, rosy cheeks, wearing a cute pink dress with a small ribbon bow, full body, happily walking, exactly two ears, anatomically correct bunny"
+  },
+  "cart": {
+    "id": "tray", "aspect": "1:1", "variant": "tray",
+    "prompt": "A cute empty red rectangular fast food serving tray with a plain cream paper placemat on it, seen from a slightly elevated front angle, chunky toy-like design"
+  },
+  "corners": [
+    {
+      "id": "burger",
+      "name": "ハンバーガー",
+      "emoji": "🍔",
+      "color": "#ea580c",
+      "layout": "burger",
+      "hint": "ぐざいを おさらに かさねてね！",
+      "background": { "id": "bg_burger", "prompt": "Inside a cute hamburger shop kitchen counter, warm red and yellow tiles, stainless steel counter, soft lighting, empty middle area, view from the customer side" },
+      "staff": {
+        "id": "staff_burger",
+        "name": "ライオンさん",
+        "prompt": "A cute lion chef wearing a tall white chef hat and a red apron, fluffy orange mane, full body, waving hello",
+        "talks": [
+          { "id": "staff_burger_1", "text": "すきな ぐざいを かさねてね！" },
+          { "id": "staff_burger_2", "text": "パンで はさんだら できあがりだよ！" },
+          { "id": "staff_burger_3", "text": "チーズを いれると おいしいよ！" },
+          { "id": "staff_burger_4", "text": "どんな ハンバーガーに するのかな？" }
+        ]
+      },
+      "voice": { "id": "corner_burger", "text": "ハンバーガーの コーナーだよ！ すきな ぐざいを かさねてね！" },
+      "voices": {
+        "done": { "id": "burger_done", "text": "ハンバーガーの できあがり！" },
+        "full": { "id": "burger_full", "text": "もう のせられないよ！" }
+      },
+      "products": [
+        { "id": "bun_bottom", "name": "したのパン", "prompt": "The bottom half of a golden hamburger bun, flat cut surface on top, rounded bottom, wide and flat" },
+        { "id": "patty", "name": "ハンバーグ", "prompt": "A thick juicy brown grilled beef hamburger patty with grill marks, wide round and flat" },
+        { "id": "cheese", "name": "チーズ", "prompt": "A square slice of melted yellow cheddar cheese with corners drooping down, thin and wide" },
+        { "id": "lettuce", "name": "レタス", "prompt": "A wavy frilly fresh green lettuce leaf, thin wide flat layer" },
+        { "id": "tomato", "name": "トマト", "prompt": "Two round red tomato slices placed side by side, thin and wide" },
+        { "id": "onion", "name": "たまねぎ", "prompt": "Several thin white onion rings slices lying flat side by side, thin and wide" },
+        { "id": "pickles", "name": "ピクルス", "prompt": "Three round green pickle slices lying flat side by side, thin and wide" },
+        { "id": "egg", "name": "めだまやき", "prompt": "A round fried egg sunny side up with a bright yellow yolk, thin and wide" },
+        { "id": "bacon", "name": "ベーコン", "prompt": "Two wavy crispy bacon strips lying flat side by side, thin and wide" },
+        { "id": "fish", "name": "フィッシュフライ", "prompt": "A square golden crispy breaded fried fish fillet, flat and wide" },
+        { "id": "chicken", "name": "チキン", "prompt": "A golden crispy fried chicken cutlet, flat and wide" },
+        { "id": "bun_top", "name": "うえのパン", "prompt": "The dome-shaped top half of a golden hamburger bun sprinkled with white sesame seeds, flat bottom, wide" }
+      ],
+      "results": [
+        { "id": "burger", "name": "ハンバーガー", "prompt": "A cute hamburger half wrapped in white and red striped wrapping paper" }
+      ]
+    },
+    {
+      "id": "fryer",
+      "name": "フライヤー",
+      "emoji": "🍟",
+      "color": "#ca8a04",
+      "layout": "fryer",
+      "hint": "フライヤーに いれて あげてね！",
+      "background": { "id": "bg_fryer", "prompt": "Inside a cute hamburger shop kitchen with a warm yellow tiled wall and stainless steel shelves, soft lighting, empty middle area, view from the customer side" },
+      "staff": {
+        "id": "staff_fryer",
+        "name": "たぬきさん",
+        "prompt": "A cute raccoon dog (tanuki) cook wearing a yellow cap and a yellow apron, full body, waving hello",
+        "talks": [
+          { "id": "staff_fryer_1", "text": "あついから きをつけてね！" },
+          { "id": "staff_fryer_2", "text": "ジュワーって あげようね！" },
+          { "id": "staff_fryer_3", "text": "あげたての ポテトは おいしいよ！" },
+          { "id": "staff_fryer_4", "text": "きつねいろに なったら できあがり！" }
+        ]
+      },
+      "voice": { "id": "corner_fryer", "text": "フライヤーの コーナーだよ！ ジュワーっと あげよう！" },
+      "voices": {
+        "ready": { "id": "fryer_ready", "text": "あがったよ！ トレーに のせてね！" },
+        "full": { "id": "fryer_full", "text": "フライヤーが いっぱいだよ！" }
+      },
+      "products": [
+        { "id": "fries", "name": "ポテト", "price": 200, "prompt": "Golden french fries in a red paper carton" },
+        { "id": "nuggets", "name": "チキンナゲット", "price": 250, "prompt": "Five golden chicken nuggets in a small open yellow paper box" },
+        { "id": "onion_rings", "name": "オニオンリング", "price": 230, "prompt": "A small pile of golden crispy onion rings" },
+        { "id": "karaage", "name": "からあげ", "price": 280, "prompt": "Japanese karaage fried chicken pieces in a small paper cup" },
+        { "id": "hash_brown", "name": "ハッシュポテト", "price": 150, "prompt": "An oval golden crispy hash brown in a small paper sleeve" },
+        { "id": "apple_pie", "name": "アップルパイ", "price": 150, "prompt": "A rectangular golden fried apple pie turnover with a little apple filling peeking out" }
+      ]
+    },
+    {
+      "id": "drink",
+      "name": "ドリンク",
+      "emoji": "🥤",
+      "color": "#0891b2",
+      "layout": "drink",
+      "hint": "ボタンを おしてる あいだ でてくるよ！",
+      "background": { "id": "bg_drink", "prompt": "Inside a cute hamburger shop drink station area, light aqua and white tiles, soft lighting, empty middle area, view from the customer side" },
+      "staff": {
+        "id": "staff_drink",
+        "name": "かえるさん",
+        "prompt": "A cute green frog shop clerk wearing a light blue cap and a light blue apron, full body, waving hello",
+        "talks": [
+          { "id": "staff_drink_1", "text": "どの ジュースに しますか？" },
+          { "id": "staff_drink_2", "text": "ボタンを ながく おすと いっぱい でるよ！" },
+          { "id": "staff_drink_3", "text": "まぜて ミックスジュースも できるよ！" },
+          { "id": "staff_drink_4", "text": "こぼさないように きをつけてね！" }
+        ]
+      },
+      "voice": { "id": "corner_drink", "text": "ドリンクの コーナーだよ！ すきな ジュースを そそいでね！" },
+      "voices": {
+        "full": { "id": "drink_full", "text": "いっぱいに なったよ！" },
+        "done": { "id": "drink_done", "text": "ドリンクの できあがり！" }
+      },
+      "products": [
+        { "id": "drink_orange", "name": "オレンジ", "reading": "オレンジジュース", "color": "#fb923c", "price": 150, "prompt": "A clear plastic cup filled with orange juice with a clear dome lid and a red and white striped straw" },
+        { "id": "drink_apple", "name": "りんご", "reading": "りんごジュース", "color": "#facc15", "price": 150, "prompt": "A clear plastic cup filled with golden yellow apple juice with a clear dome lid and a green and white striped straw" },
+        { "id": "drink_melon", "name": "メロンソーダ", "color": "#4ade80", "price": 150, "prompt": "A clear plastic cup filled with bright green melon soda with little bubbles, a clear dome lid and a striped straw" },
+        { "id": "drink_grape", "name": "ぶどう", "reading": "ぶどうジュース", "color": "#a855f7", "price": 150, "prompt": "A clear plastic cup filled with purple grape juice with a clear dome lid and a purple and white striped straw" },
+        { "id": "drink_cola", "name": "コーラ", "color": "#78350f", "price": 150, "prompt": "A clear plastic cup filled with dark brown cola with little bubbles, a clear dome lid and a red and white striped straw" },
+        { "id": "drink_strawberry_milk", "name": "いちごミルク", "color": "#f9a8d4", "price": 150, "prompt": "A clear plastic cup filled with pastel pink strawberry milk with a clear dome lid and a pink and white striped straw" }
+      ],
+      "results": [
+        { "id": "drink_mix", "name": "ミックスジュース", "price": 180, "prompt": "A clear plastic cup filled with colorful rainbow layered mixed juice with a clear dome lid and a striped straw" }
+      ]
+    }
+  ],
+  "checkout": {
+    "background": { "id": "bg_checkout", "prompt": "Inside a cute hamburger shop ordering counter area, red and yellow decor, menu boards with only pictures and no text, warm lighting, empty foreground, view from the customer side" },
+    "staff": {
+      "id": "staff_checkout",
+      "name": "きつねさん",
+      "prompt": "A cute fox cashier wearing a red cap, a red uniform and a name tag without text, upper body, smiling",
+      "talks": [
+        { "id": "staff_checkout_1", "text": "いらっしゃいませ！ ごちゅうもんは なんですか？" },
+        { "id": "staff_checkout_2", "text": "ピッて してね！" },
+        { "id": "staff_checkout_3", "text": "あったかい うちに めしあがれ！" }
+      ]
+    },
+    "voices": {
+      "intro": { "id": "checkout_intro", "text": "おかいけいを しようね！ ピッて してね！" },
+      "empty": { "id": "checkout_empty", "text": "トレーが からっぽだよ。 おみせで えらんできてね！" },
+      "allScanned": { "id": "all_scanned", "text": "ぜんぶ ふくろに いれたよ！" },
+      "askPayment": { "id": "ask_payment", "text": "おしはらいは なんに しますか？" },
+      "thanks": { "id": "thanks", "text": "ありがとうございました！" },
+      "done": { "id": "done", "text": "おかいもの できたね！ いただきます！" }
+    },
+    "props": [
+      { "id": "scanner", "aspect": "1:1", "prompt": "A cute handheld barcode scanner, red and white, toy-like, with a red light" },
+      { "id": "bag", "aspect": "1:1", "prompt": "An empty brown paper takeout bag with a folded top opening, standing open, with a small hamburger picture printed on it" },
+      { "id": "register", "aspect": "1:1", "prompt": "A cute red and yellow cash register with a small screen and a coin tray" }
+    ],
+    "payments": [
+      { "id": "cash", "name": "げんきん", "sfx": "chin", "prompt": "Japanese yen money: a 1000 yen paper bill and a few shiny coins" },
+      { "id": "card", "name": "カード", "sfx": "pi", "prompt": "A cute colorful credit card with a gold chip" },
+      { "id": "emoney", "name": "でんしけっさい", "sfx": "piroron", "prompt": "A cute smartphone showing a QR code payment screen with a big star" }
+    ],
+    "prices": [150, 180, 200, 230, 250, 280, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800]
+  },
+  "reactions": [
+    { "id": "react_1", "text": "トレーに のせたね！" },
+    { "id": "react_2", "text": "おいしそう！" },
+    { "id": "react_3", "text": "いいね！" }
+  ]
+}

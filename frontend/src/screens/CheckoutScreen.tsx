@@ -5,6 +5,7 @@ import type { CartItem, Payment, Shop } from '../types'
 import { img, voiceUrl } from '../lib/assets'
 import { playVoice, sfx, wait } from '../lib/audio'
 import { useDrag, useDragHandlers } from '../lib/drag'
+import { ItemImage } from '../components/ItemImage'
 
 interface Props {
   shop: Shop
@@ -50,7 +51,9 @@ export function CheckoutScreen({ shop, cart, onRestart, onClearCart, onGo }: Pro
   }
 
   const scan = async (item: CartItem) => {
-    const p = co.prices[Math.floor(Math.random() * co.prices.length)]
+    // 固定価格（ハンバーガーは具材の数で決まる等）があればそれを使う
+    const fixed = item.product.price
+    const p = fixed && co.prices.includes(fixed) ? fixed : co.prices[Math.floor(Math.random() * co.prices.length)]
     sfx('scan')
     setFlash((f) => f + 1)
     setPrice(p)
@@ -129,8 +132,8 @@ export function CheckoutScreen({ shop, cart, onRestart, onClearCart, onGo }: Pro
             {belt.slice(0, BELT_VISIBLE).map((it, i) => {
               const dragging = drag?.payload.kind === 'belt-item' && drag.payload.id === it.uid
               return (
-                <img key={it.uid} src={img.product(shop, it.product.id)} alt={it.product.name}
-                  className={`belt-item ${dragging ? 'ghosted' : ''}`} draggable={false}
+                <ItemImage key={it.uid} shop={shop} product={it.product}
+                  className={`belt-item ${dragging ? 'ghosted' : ''}`}
                   style={{ animationDelay: `${i * 120}ms` }}
                   onPointerDown={(e) => phase === 'scan' && start(e, {
                     kind: 'belt-item', id: it.uid, image: img.product(shop, it.product.id), data: it,
@@ -148,7 +151,7 @@ export function CheckoutScreen({ shop, cart, onRestart, onClearCart, onGo }: Pro
         <div className="bag">
           <div className="bag-items">
             {bag.slice(-8).map((it, i) => (
-              <img key={it.uid} src={img.product(shop, it.product.id)} alt="" className="bag-item"
+              <ItemImage key={it.uid} shop={shop} product={it.product} alt="" className="bag-item"
                 style={{ left: `${8 + (i % 4) * 20}%`, bottom: `${30 + Math.floor(i / 4) * 16}%`, transform: `rotate(${((i * 53) % 40) - 20}deg)` }} />
             ))}
           </div>
@@ -161,7 +164,7 @@ export function CheckoutScreen({ shop, cart, onRestart, onClearCart, onGo }: Pro
         <div className="overlay soft">
           <div className="panel">
             <img className="panel-char" src={img.char(shop, shop.shopper.id)} alt="" />
-            <p>カートが からっぽだよ</p>
+            <p>{shop.cartName ?? 'カート'}が からっぽだよ</p>
             <button className="big-btn" onClick={() => onGo({ type: 'corner', index: 0 })}>おかいものに いく！</button>
           </div>
         </div>

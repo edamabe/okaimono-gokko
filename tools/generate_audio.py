@@ -55,8 +55,10 @@ def build_jobs(shop: dict) -> list[tuple[str, str]]:
         jobs.append((c["voice"]["id"], c["voice"]["text"]))
         for t in c["staff"].get("talks", []):
             jobs.append((t["id"], t["text"]))
-        for p in c["products"]:
+        for p in c["products"] + c.get("results", []):
             jobs.append((f"product_{p['id']}", p.get("reading", p["name"]) + "！"))
+        for v in c.get("voices", {}).values():
+            jobs.append((v["id"], v["text"]))
     co = shop["checkout"]
     for v in co["voices"].values():
         jobs.append((v["id"], v["text"]))

@@ -15,7 +15,8 @@ export const voiceUrl = (s: Shop, id: string) => `/audio/${s.id}/${id}.wav`
 export function allVoiceIds(s: Shop): string[] {
   const ids = [s.title.voice.id]
   for (const c of s.corners) {
-    ids.push(c.voice.id, ...c.products.map((p) => `product_${p.id}`))
+    ids.push(c.voice.id, ...[...c.products, ...(c.results ?? [])].map((p) => `product_${p.id}`))
+    ids.push(...Object.values(c.voices ?? {}).map((v) => v.id))
   }
   ids.push(...Object.values(s.checkout.voices).map((v) => v.id))
   ids.push(...s.checkout.payments.map((p) => `pay_${p.id}`))

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import type { CartItem, Shop } from '../types'
 import { img } from '../lib/assets'
 import { useDrag } from '../lib/drag'
+import { ItemImage } from './ItemImage'
 
 interface Props {
   shop: Shop
@@ -19,7 +20,7 @@ const MAX_VISIBLE = 18
 export function Cart({ shop, items, droppable = true, draggableItems = true, size = 'large' }: Props) {
   const { start, drag } = useDrag()
   const [bump, setBump] = useState(false)
-  const over = drag?.over === 'cart' && drag.payload.kind === 'product'
+  const over = drag?.over === 'cart' && ['product', 'fried'].includes(drag.payload.kind)
 
   useEffect(() => {
     if (!items.length) return
@@ -30,17 +31,17 @@ export function Cart({ shop, items, droppable = true, draggableItems = true, siz
 
   const visible = items.slice(-MAX_VISIBLE)
   return (
-    <div className={`cart cart-${size} ${over ? 'over' : ''} ${bump ? 'bump' : ''}`}
+    <div className={`cart cart-${size} cart-${shop.cart.variant ?? 'cart'} ${over ? 'over' : ''} ${bump ? 'bump' : ''}`}
       {...(droppable ? { 'data-drop': 'cart' } : {})}>
-      <img className="cart-img" src={img.prop(shop, shop.cart.id)} alt="カート" draggable={false} />
+      <img className="cart-img" src={img.prop(shop, shop.cart.id)} alt={shop.cartName ?? 'カート'} draggable={false} />
       <div className="cart-pile">
         {visible.map((it, i) => {
           const col = i % 6
           const row = Math.floor(i / 6)
           const dragging = drag?.payload.kind === 'cart-item' && drag.payload.id === it.uid
           return (
-            <img key={it.uid} src={img.product(shop, it.product.id)} alt={it.product.name}
-              className={`pile-item ${dragging ? 'ghosted' : ''}`} draggable={false}
+            <ItemImage key={it.uid} shop={shop} product={it.product}
+              className={`pile-item ${dragging ? 'ghosted' : ''}`}
               style={{
                 left: `${6 + col * 14 + (row % 2) * 6}%`,
                 bottom: `${row * 22}%`,
