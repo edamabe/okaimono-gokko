@@ -6,7 +6,8 @@ import { playVoice, sfx, wait } from '../../lib/audio'
 import { useDrag } from '../../lib/drag'
 import { BurgerStack, stackWidth } from '../../components/ItemImage'
 
-const MAX_LAYERS = 12
+const DEFAULT_LAYERS = ['bun_bottom']
+const MAX_LAYERS = 10
 
 /** 具材の数で値段が決まる（checkout.prices に含まれる 50円刻み） */
 function burgerPrice(n: number) {
@@ -16,7 +17,7 @@ function burgerPrice(n: number) {
 /** ハンバーガーづくり: 具材をおさらへドラッグして好きな順に重ねる */
 export function BurgerLayout({ shop, corner, onAdd, handlers }: LayoutProps) {
   const { start, drag } = useDrag()
-  const [layers, setLayers] = useState<string[]>([])
+  const [layers, setLayers] = useState<string[]>(DEFAULT_LAYERS)
   const [finishing, setFinishing] = useState(false)
   const layersRef = useRef(layers)
   layersRef.current = layers
@@ -37,6 +38,20 @@ export function BurgerLayout({ shop, corner, onAdd, handlers }: LayoutProps) {
   const result = corner.results?.[0]
   const v = (id?: string) => id && voiceUrl(shop, id)
 
+  const finish = async (targetLayers?: string[]) => {
+    const cur = targetLayers ?? layersRef.current
+    if (cur.length <= 1 || finishing || !result) return
+    setFinishing(true)
+    sfx('fanfare')
+    const done = v(corner.voices?.done?.id)
+    await Promise.all([done ? playVoice(done) : Promise.resolve(), wait(1100)])
+    if (!alive.current) return
+    const burger: Product = { ...result, layers: [...cur], price: burgerPrice(cur.length) }
+    onAdd(burger)
+    setLayers(DEFAULT_LAYERS)
+    setFinishing(false)
+  }
+
   handlers.current = {
     start: (p) => {
       if (p.kind !== 'ingredient') return false
@@ -53,29 +68,21 @@ export function BurgerLayout({ shop, corner, onAdd, handlers }: LayoutProps) {
         if (full) void playVoice(full)
         return true
       }
-      setLayers((l) => [...l, p.id])
+      const nextLayers = [...layersRef.current, p.id]
+      setLayers(nextLayers)
       sfx('pop')
+      // 上のパンで挟んだら自動で出来上がり判定、または全10段に達したら自動で出来上がり判定
+      if (p.id === 'bun_top' || nextLayers.length >= MAX_LAYERS) {
+        void finish(nextLayers)
+      }
       return true
     },
   }
 
   const removeTop = () => {
-    if (finishing) return
+    if (finishing || layers.length <= 1) return
     sfx('whoosh')
-    setLayers((l) => l.slice(0, -1))
-  }
-
-  const finish = async () => {
-    if (!layers.length || finishing || !result) return
-    setFinishing(true)
-    sfx('fanfare')
-    const done = v(corner.voices?.done?.id)
-    await Promise.all([done ? playVoice(done) : Promise.resolve(), wait(1100)])
-    if (!alive.current) return
-    const burger: Product = { ...result, layers: [...layers], price: burgerPrice(layers.length) }
-    onAdd(burger)
-    setLayers([])
-    setFinishing(false)
+    setLayers((l) => (l.length > 1 ? l.slice(0, -1) : l))
   }
 
   const over = drag?.over === 'plate' && drag.payload.kind === 'ingredient'
@@ -96,15 +103,15 @@ export function BurgerLayout({ shop, corner, onAdd, handlers }: LayoutProps) {
 
       <div className="build">
         <div ref={plateRef} className={`plate-zone ${over ? 'over' : ''} ${finishing ? 'finishing' : ''}`} data-drop="plate">
-          {layers.length === 0 && <div className="plate-hint">ここに のせてね！<small>したのパン から はじめよう</small></div>}
+          {layers.length <= 1 && <div className="plate-hint">すきな ぐざいを のせてね！<small>うえのパンで はさんだら できあがり！</small></div>}
           <div className="plate" />
           <BurgerStack shop={shop} layers={layers} width={width} onTapTop={removeTop} />
           {finishing && <div className="sparkles" aria-hidden="true">✨🍔✨</div>}
         </div>
         <div className="build-btns">
-          <button className="sub-btn" disabled={!layers.length || finishing}
-            onClick={() => { sfx('whoosh'); setLayers([]) }}>🔄 やりなおし</button>
-          <button className="go-btn" disabled={!layers.length || finishing} onClick={() => void finish()}>
+          <button className="sub-btn" disabled={layers.length <= 1 || finishing}
+            onClick={() => { sfx('whoosh'); setLayers(DEFAULT_LAYERS) }}>🔄 やりなおし</button>
+          <button className="go-btn" disabled={layers.length <= 1 || finishing} onClick={() => void finish()}>
             ✨ できあがり！
           </button>
         </div>

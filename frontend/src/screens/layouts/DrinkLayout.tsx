@@ -17,7 +17,8 @@ export function DrinkLayout({ shop, corner, onAdd }: LayoutProps) {
   const [lid, setLid] = useState(false)
   const totalRef = useRef(0)
   const total = segs.reduce((s, x) => s + x.amount, 0)
-  totalRef.current = total
+  const segsRef = useRef(segs)
+  segsRef.current = segs
   const stopRef = useRef<(() => void) | null>(null)
   const alive = useRef(true)
 
@@ -34,6 +35,30 @@ export function DrinkLayout({ shop, corner, onAdd }: LayoutProps) {
     return () => { alive.current = false; stopRef.current?.() }
   }, [])
 
+  const serve = async (targetSegs?: Seg[]) => {
+    const curSegs = targetSegs ?? segsRef.current
+    const curTotal = curSegs.reduce((s, x) => s + x.amount, 0)
+    if (lid || curTotal < MIN_TO_SERVE) return
+    stopPour()
+    setLid(true)
+    sfx('pop')
+    // いちばん多い味が7割以上ならその味、そうでなければミックスジュース
+    const byId = new Map<string, number>()
+    curSegs.forEach((s) => byId.set(s.id, (byId.get(s.id) ?? 0) + s.amount))
+    const [topId, topAmt] = [...byId.entries()].sort((a, b) => b[1] - a[1])[0]
+    const mix = corner.results?.[0]
+    const product = (topAmt / curTotal < 0.7 && mix) ? mix : corner.products.find((p) => p.id === topId)!
+    const done = v(corner.voices?.done?.id)
+    await wait(500)
+    if (done) await playVoice(done)
+    if (!alive.current) return
+    await playVoice(voiceUrl(shop, `product_${product.id}`))
+    if (!alive.current) return
+    onAdd(product)
+    setSegs([])
+    setLid(false)
+  }
+
   // 注いでいる間、少しずつ増やす
   useEffect(() => {
     if (!pouring) return
@@ -42,17 +67,28 @@ export function DrinkLayout({ shop, corner, onAdd }: LayoutProps) {
       if (totalRef.current >= 100) {
         stopPour()
         sfx('ding')
-        const full = v(corner.voices?.full?.id)
-        if (full) void playVoice(full)
+        void serve()
         return
       }
       const add = Math.min(PER_TICK, 100 - totalRef.current)
-      totalRef.current += add
+      const nextTotal = totalRef.current + add
+      totalRef.current = nextTotal
+      let nextSegs: Seg[] = []
       setSegs((s) => {
         const last = s[s.length - 1]
-        if (last && last.id === pouring.id) return [...s.slice(0, -1), { ...last, amount: last.amount + add }]
-        return [...s, { id: pouring.id, color, amount: add }]
+        if (last && last.id === pouring.id) {
+          nextSegs = [...s.slice(0, -1), { ...last, amount: last.amount + add }]
+        } else {
+          nextSegs = [...s, { id: pouring.id, color, amount: add }]
+        }
+        return nextSegs
       })
+      // いっぱいまで注いだら自動的に出来上がり判定へ
+      if (nextTotal >= 100) {
+        stopPour()
+        sfx('ding')
+        void serve(nextSegs)
+      }
     }, TICK_MS)
     // 指を離したらとめる（タッチはボタン外でも pointerup がここに届く）
     const up = () => stopPour()
@@ -72,28 +108,6 @@ export function DrinkLayout({ shop, corner, onAdd }: LayoutProps) {
     void playVoice(voiceUrl(shop, `product_${p.id}`))
     stopRef.current = startLoop('pour')
     setPouring(p)
-  }
-
-  const serve = async () => {
-    if (lid || total < MIN_TO_SERVE) return
-    stopPour()
-    setLid(true)
-    sfx('pop')
-    // いちばん多い味が7割以上ならその味、そうでなければミックスジュース
-    const byId = new Map<string, number>()
-    segs.forEach((s) => byId.set(s.id, (byId.get(s.id) ?? 0) + s.amount))
-    const [topId, topAmt] = [...byId.entries()].sort((a, b) => b[1] - a[1])[0]
-    const mix = corner.results?.[0]
-    const product = (topAmt / total < 0.7 && mix) ? mix : corner.products.find((p) => p.id === topId)!
-    const done = v(corner.voices?.done?.id)
-    await wait(500)
-    if (done) await playVoice(done)
-    if (!alive.current) return
-    await playVoice(voiceUrl(shop, `product_${product.id}`))
-    if (!alive.current) return
-    onAdd(product)
-    setSegs([])
-    setLid(false)
   }
 
   const discard = () => {
