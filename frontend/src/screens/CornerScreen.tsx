@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { Screen } from '../App'
-import type { CartItem, Corner, Product, Shop } from '../types'
+import { MAX_CART_ITEMS, type CartItem, type Corner, type Product, type Shop } from '../types'
 import { img, voiceUrl } from '../lib/assets'
 import { playVoice, playVoiceIfIdle, sfx } from '../lib/audio'
 import { useDrag, useDragHandlers, type DragPayload } from '../lib/drag'
@@ -30,6 +30,7 @@ export interface LayoutProps {
   /** カート（トレー）に入れる（効果音・リアクション付き） */
   onAdd: (p: Product) => void
   handlers: React.MutableRefObject<LayoutHandlers>
+  cartCount: number
 }
 
 export function CornerScreen({ shop, index, cart, onAdd, onRemove, onGo }: Props) {
@@ -62,6 +63,10 @@ export function CornerScreen({ shop, index, cart, onAdd, onRemove, onGo }: Props
   }
 
   const addWithReaction = (product: Product) => {
+    if (cart.length >= MAX_CART_ITEMS) {
+      sfx('whoosh')
+      return
+    }
     onAdd(product)
     sfx('pop')
     const r = shop.reactions ?? []
@@ -81,6 +86,10 @@ export function CornerScreen({ shop, index, cart, onAdd, onRemove, onGo }: Props
     (p, target) => {
       if (handlers.current.drop?.(p, target)) return
       if (p.kind === 'product' && target === 'cart') {
+        if (cart.length >= MAX_CART_ITEMS) {
+          sfx('whoosh')
+          return
+        }
         addWithReaction(p.data as Product)
       } else if (p.kind === 'cart-item' && target !== 'cart') {
         onRemove(p.id)
@@ -89,10 +98,11 @@ export function CornerScreen({ shop, index, cart, onAdd, onRemove, onGo }: Props
     },
   )
 
+  const isFull = cart.length >= MAX_CART_ITEMS
   const prev = index > 0 ? { type: 'corner', index: index - 1 } as Screen : null
-  const next: Screen = index < shop.corners.length - 1 ? { type: 'corner', index: index + 1 } : { type: 'checkout' }
-  const nextLabel = next.type === 'checkout' ? 'おかいけい' : shop.corners[index + 1].name
-  const layoutProps: LayoutProps = { shop, corner, onAdd: addWithReaction, handlers }
+  const next: Screen = isFull ? { type: 'checkout' } : (index < shop.corners.length - 1 ? { type: 'corner', index: index + 1 } : { type: 'checkout' })
+  const nextLabel = isFull ? 'おかいけいへ いこう！' : (next.type === 'checkout' ? 'おかいけい' : shop.corners[index + 1].name)
+  const layoutProps: LayoutProps = { shop, corner, onAdd: addWithReaction, handlers, cartCount: cart.length }
 
   return (
     <main className={`corner layout-${corner.layout ?? 'shelf'}`} style={{ backgroundImage: `url(${img.bg(shop, corner.background.id)})`, '--corner': corner.color } as React.CSSProperties}>
@@ -103,7 +113,7 @@ export function CornerScreen({ shop, index, cart, onAdd, onRemove, onGo }: Props
           </button>
           <div className="bubble">
             <b>{corner.emoji} {corner.name}</b> コーナー
-            <span>{talkText ?? corner.hint ?? `すきなものを ${shop.cartName ?? 'カート'}に いれてね！`}</span>
+            <span>{isFull ? 'トレーが いっぱいに なったよ！ おかいけいに いこう！' : (talkText ?? corner.hint ?? `すきなものを ${shop.cartName ?? 'カート'}に いれてね！`)}</span>
           </div>
         </div>
         {(() => {
@@ -121,7 +131,7 @@ export function CornerScreen({ shop, index, cart, onAdd, onRemove, onGo }: Props
         <Cart shop={shop} items={cart} />
         <div className="nav-row">
           {prev && <button className="nav-btn prev" onClick={() => onGo(prev)}>◀</button>}
-          <button className={`nav-btn next ${next.type === 'checkout' ? 'pay' : ''}`} onClick={() => onGo(next)}>
+          <button className={`nav-btn next ${next.type === 'checkout' ? 'pay' : ''} ${isFull ? 'full-guide' : ''}`} onClick={() => onGo(next)}>
             {nextLabel} ▶
           </button>
         </div>

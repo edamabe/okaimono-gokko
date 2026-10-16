@@ -1,5 +1,7 @@
 // 店舗定義（src/data/shops/*.json）の型。新しいお店はこの形の JSON を追加するだけで遊べる。
 
+export const MAX_CART_ITEMS = 15
+
 export interface Voice { id: string; text: string }
 export interface ImageSpec { id: string; prompt: string; aspect?: string }
 

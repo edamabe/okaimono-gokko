@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { findShop, shops } from './data/shops'
-import type { CartItem, Product } from './types'
+import { MAX_CART_ITEMS, type CartItem, type Product } from './types'
 import { DragProvider } from './lib/drag'
 import { allVoiceIds, img, voiceUrl } from './lib/assets'
-import { preload, setMuted, stopVoice } from './lib/audio'
+import { preload, setMuted, sfx, stopVoice } from './lib/audio'
 import { TitleScreen } from './screens/TitleScreen'
 import { CornerScreen } from './screens/CornerScreen'
 import { CheckoutScreen } from './screens/CheckoutScreen'
@@ -76,7 +76,18 @@ export default function App() {
   }, [shop])
 
   const addToCart = useCallback((product: Product) => {
-    setCart((c) => [...c, { uid: `i${++uidSeq}`, product }])
+    setCart((c) => {
+      if (c.length >= MAX_CART_ITEMS) return c
+      const next = [...c, { uid: `i${++uidSeq}`, product }]
+      // 15個に達したら余韻を残してお会計画面へ自動遷移
+      if (next.length >= MAX_CART_ITEMS) {
+        setTimeout(() => {
+          sfx('fanfare')
+          setScreen({ type: 'checkout' })
+        }, 850)
+      }
+      return next
+    })
   }, [])
   const removeFromCart = useCallback((uid: string) => {
     setCart((c) => c.filter((i) => i.uid !== uid))

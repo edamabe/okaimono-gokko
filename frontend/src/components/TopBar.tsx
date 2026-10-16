@@ -1,5 +1,5 @@
 import type { Screen } from '../App'
-import type { Shop } from '../types'
+import { MAX_CART_ITEMS, type Shop } from '../types'
 
 interface Props {
   shop: Shop
@@ -12,6 +12,7 @@ interface Props {
 
 export function TopBar({ shop, screen, cartCount, sound, onSound, onGo }: Props) {
   const kidsRoom = `http://${location.hostname}:3010/kids.html`
+  const isFull = cartCount >= MAX_CART_ITEMS
   return (
     <header className="topbar">
       <a className="round-btn home" href={kidsRoom} title="こどものへやに もどる">🏠</a>
@@ -27,12 +28,12 @@ export function TopBar({ shop, screen, cartCount, sound, onSound, onGo }: Props)
             </button>
           )
         })}
-        <button className={`tab ${screen.type === 'checkout' ? 'active' : ''}`}
+        <button className={`tab ${screen.type === 'checkout' ? 'active' : ''} ${isFull ? 'full-guide' : ''}`}
           style={{ '--tab': '#ef4444' } as React.CSSProperties}
           onClick={() => onGo({ type: 'checkout' })}>
           <span className="tab-emoji">🧾</span>
           <span className="tab-label">おかいけい</span>
-          {cartCount > 0 && <span className="badge">{cartCount}</span>}
+          {cartCount > 0 && <span className={`badge ${isFull ? 'full' : ''}`}>{isFull ? `${cartCount} まんたん!` : cartCount}</span>}
         </button>
       </nav>
       <button className="round-btn" onClick={onSound} title="おと">{sound ? '🔊' : '🔇'}</button>

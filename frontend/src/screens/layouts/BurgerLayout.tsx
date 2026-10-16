@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { LayoutProps } from '../CornerScreen'
-import type { Product } from '../../types'
+import { MAX_CART_ITEMS, type Product } from '../../types'
 import { img, voiceUrl } from '../../lib/assets'
 import { playVoice, sfx, wait } from '../../lib/audio'
 import { useDrag } from '../../lib/drag'
@@ -15,10 +15,11 @@ function burgerPrice(n: number) {
 }
 
 /** ハンバーガーづくり: 具材をおさらへドラッグして好きな順に重ねる */
-export function BurgerLayout({ shop, corner, onAdd, handlers }: LayoutProps) {
+export function BurgerLayout({ shop, corner, onAdd, handlers, cartCount }: LayoutProps) {
   const { start, drag } = useDrag()
   const [layers, setLayers] = useState<string[]>(DEFAULT_LAYERS)
   const [finishing, setFinishing] = useState(false)
+  const isCartFull = cartCount >= MAX_CART_ITEMS
   const layersRef = useRef(layers)
   layersRef.current = layers
   const alive = useRef(true)
@@ -40,7 +41,7 @@ export function BurgerLayout({ shop, corner, onAdd, handlers }: LayoutProps) {
 
   const finish = async (targetLayers?: string[]) => {
     const cur = targetLayers ?? layersRef.current
-    if (cur.length <= 1 || finishing || !result) return
+    if (cur.length <= 1 || finishing || !result || isCartFull) return
     setFinishing(true)
     sfx('fanfare')
     const done = v(corner.voices?.done?.id)
@@ -94,7 +95,8 @@ export function BurgerLayout({ shop, corner, onAdd, handlers }: LayoutProps) {
       <div className="bins">
         {corner.products.map((p) => (
           <button key={p.id} className={`bin ${drag?.payload.id === p.id ? 'lifted' : ''}`}
-            onPointerDown={(e) => !finishing && start(e, { kind: 'ingredient', id: p.id, image: img.product(shop, p.id), data: p })}>
+            disabled={isCartFull}
+            onPointerDown={(e) => !finishing && !isCartFull && start(e, { kind: 'ingredient', id: p.id, image: img.product(shop, p.id), data: p })}>
             <span className="bin-img"><img src={img.product(shop, p.id)} alt={p.name} draggable={false} /></span>
             <span className="product-name">{p.name}</span>
           </button>
@@ -103,15 +105,20 @@ export function BurgerLayout({ shop, corner, onAdd, handlers }: LayoutProps) {
 
       <div className="build">
         <div ref={plateRef} className={`plate-zone ${over ? 'over' : ''} ${finishing ? 'finishing' : ''}`} data-drop="plate">
-          {layers.length <= 1 && <div className="plate-hint">すきな ぐざいを のせてね！<small>うえのパンで はさんだら できあがり！</small></div>}
+          {layers.length <= 1 && (
+            <div className="plate-hint">
+              {isCartFull ? 'トレーが いっぱいに なったよ！' : 'すきな ぐざいを のせてね！'}
+              <small>{isCartFull ? 'おかいけいへ いこう！' : 'うえのパンで はさんだら できあがり！'}</small>
+            </div>
+          )}
           <div className="plate" />
           <BurgerStack shop={shop} layers={layers} width={width} onTapTop={removeTop} />
           {finishing && <div className="sparkles" aria-hidden="true">✨🍔✨</div>}
         </div>
         <div className="build-btns">
-          <button className="sub-btn" disabled={layers.length <= 1 || finishing}
+          <button className="sub-btn" disabled={layers.length <= 1 || finishing || isCartFull}
             onClick={() => { sfx('whoosh'); setLayers(DEFAULT_LAYERS) }}>🔄 やりなおし</button>
-          <button className="go-btn" disabled={layers.length <= 1 || finishing} onClick={() => void finish()}>
+          <button className="go-btn" disabled={layers.length <= 1 || finishing || isCartFull} onClick={() => void finish()}>
             ✨ できあがり！
           </button>
         </div>

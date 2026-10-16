@@ -41,7 +41,7 @@
         "full": { "id": "burger_full", "text": "もう のせられないよ！" }
       },
       "products": [
-        { "id": "bun_bottom", "name": "したのパン", "prompt": "The bottom half of a golden hamburger bun, flat cut surface on top, rounded bottom, wide and flat" },
+        { "id": "bun_middle", "name": "まんなかのパン", "prompt": "A middle slice hamburger bun (club bun), flat cut surface on both top and bottom with soft golden toasted edges, thin and wide" },
         { "id": "patty", "name": "ハンバーグ", "prompt": "A thick juicy brown grilled beef hamburger patty with grill marks, wide round and flat" },
         { "id": "cheese", "name": "チーズ", "prompt": "A square slice of melted yellow cheddar cheese with corners drooping down, thin and wide" },
         { "id": "lettuce", "name": "レタス", "prompt": "A wavy frilly fresh green lettuce leaf, thin wide flat layer" },
@@ -79,7 +79,7 @@
       },
       "voice": { "id": "corner_fryer", "text": "フライヤーの コーナーだよ！ ジュワーっと あげよう！" },
       "voices": {
-        "ready": { "id": "fryer_ready", "text": "あがったよ！ トレーに のせてね！" },
+        "ready": { "id": "fryer_ready", "text": "あがったよ！" },
         "full": { "id": "fryer_full", "text": "フライヤーが いっぱいだよ！" }
       },
       "products": [

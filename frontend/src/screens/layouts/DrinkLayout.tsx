@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { LayoutProps } from '../CornerScreen'
-import type { Product } from '../../types'
+import { MAX_CART_ITEMS, type Product } from '../../types'
 import { img, voiceUrl } from '../../lib/assets'
 import { playVoice, sfx, startLoop, wait } from '../../lib/audio'
 
@@ -11,7 +11,7 @@ const MIN_TO_SERVE = 25
 interface Seg { id: string; color: string; amount: number }
 
 /** ドリンクサーバー: ボタンを押している間ジュースが注がれる。まぜるとミックスジュース */
-export function DrinkLayout({ shop, corner, onAdd }: LayoutProps) {
+export function DrinkLayout({ shop, corner, onAdd, cartCount }: LayoutProps) {
   const [segs, setSegs] = useState<Seg[]>([])
   const [pouring, setPouring] = useState<Product | null>(null)
   const [lid, setLid] = useState(false)
@@ -22,6 +22,7 @@ export function DrinkLayout({ shop, corner, onAdd }: LayoutProps) {
   const stopRef = useRef<(() => void) | null>(null)
   const alive = useRef(true)
 
+  const isCartFull = cartCount >= MAX_CART_ITEMS
   const total = Math.min(100, Math.round(segs.reduce((s, x) => s + x.amount, 0)))
 
   const v = (id?: string) => id && voiceUrl(shop, id)
@@ -157,7 +158,7 @@ export function DrinkLayout({ shop, corner, onAdd }: LayoutProps) {
 
   const startPour = (e: React.PointerEvent, p: Product) => {
     e.preventDefault()
-    if (lid || serving || servingRef.current || pouring || totalRef.current >= 100) return
+    if (isCartFull || lid || serving || servingRef.current || pouring || totalRef.current >= 100) return
     void playVoice(voiceUrl(shop, `product_${p.id}`))
     stopRef.current = startLoop('pour')
     setPouring(p)
@@ -176,7 +177,7 @@ export function DrinkLayout({ shop, corner, onAdd }: LayoutProps) {
         {corner.products.map((p) => (
           <button key={p.id} type="button"
             className={`flavor ${pouring?.id === p.id ? 'pressing' : ''}`}
-            disabled={lid || serving || total >= 100}
+            disabled={isCartFull || lid || serving || total >= 100}
             style={{ '--flavor': p.color ?? '#fb923c' } as React.CSSProperties}
             onPointerDown={(e) => startPour(e, p)}
             onPointerUp={stopPour}
@@ -210,7 +211,7 @@ export function DrinkLayout({ shop, corner, onAdd }: LayoutProps) {
         </div>
         <div className="build-btns">
           <button type="button" className="sub-btn" disabled={lid || serving || !segs.length} onClick={discard}>🫗 すてる</button>
-          <button type="button" className="go-btn" disabled={lid || serving || total < MIN_TO_SERVE} onClick={() => void serve()}>
+          <button type="button" className="go-btn" disabled={isCartFull || lid || serving || total < MIN_TO_SERVE} onClick={() => void serve()}>
             ✨ できあがり！
           </button>
         </div>

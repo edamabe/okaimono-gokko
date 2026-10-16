@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import type { CartItem, Shop } from '../types'
+import { MAX_CART_ITEMS, type CartItem, type Shop } from '../types'
 import { img } from '../lib/assets'
 import { useDrag } from '../lib/drag'
 import { ItemImage } from './ItemImage'
@@ -30,8 +30,10 @@ export function Cart({ shop, items, droppable = true, draggableItems = true, siz
   }, [items.length])
 
   const visible = items.slice(-MAX_VISIBLE)
+  const isFull = items.length >= MAX_CART_ITEMS
+
   return (
-    <div className={`cart cart-${size} cart-${shop.cart.variant ?? 'cart'} ${over ? 'over' : ''} ${bump ? 'bump' : ''}`}
+    <div className={`cart cart-${size} cart-${shop.cart.variant ?? 'cart'} ${over ? 'over' : ''} ${bump ? 'bump' : ''} ${isFull ? 'full' : ''}`}
       {...(droppable ? { 'data-drop': 'cart' } : {})}>
       <img className="cart-img" src={img.prop(shop, shop.cart.id)} alt={shop.cartName ?? 'カート'} draggable={false} />
       <div className="cart-pile">
@@ -55,7 +57,11 @@ export function Cart({ shop, items, droppable = true, draggableItems = true, siz
           )
         })}
       </div>
-      {items.length > 0 && <div className="cart-count">{items.length}<small>こ</small></div>}
+      {items.length > 0 && (
+        <div className={`cart-count ${isFull ? 'full' : ''}`}>
+          {items.length}<small>{isFull ? 'こ (まんたん!)' : 'こ'}</small>
+        </div>
+      )}
     </div>
   )
 }
