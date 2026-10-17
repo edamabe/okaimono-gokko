@@ -231,6 +231,15 @@ img { -webkit-user-drag: none; }
   width: clamp(80px, 11vw, 130px); aspect-ratio: 1; object-fit: contain; touch-action: none;
   filter: drop-shadow(0 6px 4px rgba(0,0,0,.3)); animation: slide-in .7s backwards cubic-bezier(.22,1,.36,1);
 }
+.belt-item.burger-mini {
+  width: clamp(90px, 12vw, 140px);
+  aspect-ratio: auto;
+  height: clamp(90px, 12vw, 140px);
+  overflow: visible;
+}
+.belt-item.burger-mini .stack {
+  width: 100% !important;
+}
 .belt-more { align-self: center; background: #fff; border-radius: 12px; padding: 4px 10px; font-weight: 900; }
 
 .scanner { position: relative; width: clamp(120px, 15vw, 180px); flex: none; transition: transform .2s; }
@@ -246,7 +255,9 @@ img { -webkit-user-drag: none; }
 .bag { position: relative; width: clamp(140px, 18vw, 220px); flex: none; }
 .bag-img { position: relative; width: 100%; z-index: 2; filter: drop-shadow(0 6px 6px rgba(0,0,0,.2)); }
 .bag-items { position: absolute; inset: 0; z-index: 1; }
-.bag-item { position: absolute; width: 34%; animation: drop-in .45s cubic-bezier(.34,1.56,.64,1); }
+.bag-item { position: absolute; width: 38%; animation: drop-in .45s cubic-bezier(.34,1.56,.64,1); }
+.bag-item.burger-mini { width: 48%; aspect-ratio: auto; overflow: visible; }
+.bag-item.burger-mini .stack { width: 100% !important; }
 
 .pay-tray {
   position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 30;
@@ -280,6 +291,7 @@ img { -webkit-user-drag: none; }
 /* ---------- トレー（ハンバーガー屋さん） ---------- */
 .cart-tray .cart-pile { left: 14%; right: 14%; top: 18%; height: 40%; }
 .cart-tray .pile-item { width: 26%; }
+.cart-tray .pile-item.burger-mini { width: 34%; }
 
 /* ---------- 具材スタック（自作ハンバーガー） ---------- */
 .stack { display: flex; flex-direction: column-reverse; align-items: center; position: relative; z-index: 2; }
@@ -293,8 +305,11 @@ img { -webkit-user-drag: none; }
 .stack .layer-onion { width: 94%; margin-bottom: -24% !important; }
 .stack .layer-bun_middle { width: 100%; margin-bottom: -28% !important; }
 .stack .layer-bun_top { margin-bottom: -22% !important; }
-.burger-mini { display: flex; align-items: flex-end; justify-content: center; aspect-ratio: 1; }
+.burger-mini { display: flex; align-items: flex-end; justify-content: center; position: relative; }
+.burger-mini .stack { width: 100% !important; }
 .burger-mini .stack .layer { animation: none; }
+.burger-mini .stack .layer:not(:first-child) { margin-bottom: -30% !important; }
+.burger-mini .stack .layer-bun_top { margin-bottom: -22% !important; }
 
 /* 共通の操作ボタン */
 .build-btns { flex: none; display: flex; gap: 8px; justify-content: center; padding: 6px 4px 0; }

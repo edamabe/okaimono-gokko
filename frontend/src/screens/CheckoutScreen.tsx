@@ -150,10 +150,19 @@ export function CheckoutScreen({ shop, cart, onRestart, onClearCart, onGo }: Pro
         </div>
         <div className="bag">
           <div className="bag-items">
-            {bag.slice(-8).map((it, i) => (
-              <ItemImage key={it.uid} shop={shop} product={it.product} alt="" className="bag-item"
-                style={{ left: `${8 + (i % 4) * 20}%`, bottom: `${30 + Math.floor(i / 4) * 16}%`, transform: `rotate(${((i * 53) % 40) - 20}deg)` }} />
-            ))}
+            {bag.slice(-8).map((it, i) => {
+              const isPaperBag = shop.cart.variant === 'tray' || shop.id === 'burger'
+              const baseBottom = isPaperBag ? 46 : 30
+              const rowOffset = isPaperBag ? 10 : 16
+              return (
+                <ItemImage key={it.uid} shop={shop} product={it.product} alt="" className="bag-item"
+                  style={{
+                    left: `${8 + (i % 4) * 20}%`,
+                    bottom: `${baseBottom + Math.floor(i / 4) * rowOffset}%`,
+                    transform: `rotate(${((i * 53) % 40) - 20}deg)`,
+                  }} />
+              )
+            })}
           </div>
           <img className="bag-img" src={img.prop(shop, 'bag')} alt="レジぶくろ" draggable={false} />
           {bag.length > 0 && <div className="cart-count">{bag.length}<small>こ</small></div>}

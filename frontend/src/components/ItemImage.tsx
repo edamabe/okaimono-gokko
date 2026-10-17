@@ -45,7 +45,7 @@ export function ItemImage({ shop, product, className = '', style, alt, onPointer
     return (
       <div className={`${className} burger-mini`} style={style} onPointerDown={onPointerDown}
         role="img" aria-label={alt ?? product.name}>
-        <BurgerStack shop={shop} layers={product.layers} width={stackWidth(product.layers.length)} />
+        <BurgerStack shop={shop} layers={product.layers} width={100} />
       </div>
     )
   }
